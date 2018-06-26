@@ -18,11 +18,11 @@ public class OssUtil {
     private static final String ENDPOINT = "http://oss-cn-hangzhou.aliyuncs.com";
 
     // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录 https://ram.console.aliyun.com 创建RAM账号。
-    private static final String ACCESS_KEY_ID = "LTAIQfY1B2WSGiYU";
+    private static final String ACCESS_KEY_ID = "";
 
-    private static final String ACCESS_KEY_SECRET = "Q6zA2VEvo5kmluqugxGOY1kz4VQlge";
+    private static final String ACCESS_KEY_SECRET = "";
 
-    private static final String BUCKET_NAME = "yuxinyu";
+    private static final String BUCKET_NAME = "";
 
     public static void save(File file) {
 
