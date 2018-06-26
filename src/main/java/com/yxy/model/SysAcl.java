@@ -132,4 +132,5 @@ public class SysAcl {
     public void setOperateIp(String operateIp) {
         this.operateIp = operateIp == null ? null : operateIp.trim();
     }
+
 }

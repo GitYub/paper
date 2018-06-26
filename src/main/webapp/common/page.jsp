@@ -37,6 +37,7 @@
     
     function renderPage(url, total, pageNo, pageSize, currentSize, idElement, callback) {
         var maxPageNo = Math.ceil(total / pageSize);
+        pageNo = Number(pageNo);
         var paramStartChar = url.indexOf("?") > 0 ? "&" : "?";
         var from = (pageNo - 1) * pageSize + 1;
         var view = {
@@ -49,15 +50,17 @@
             beforePageNo : pageNo == 1 ? 1 : (pageNo - 1),
             firstUrl : (pageNo == 1) ? '' : (url + paramStartChar + "pageNo=1&pageSize=" + pageSize),
             beforeUrl: (pageNo == 1) ? '' : (url + paramStartChar + "pageNo=" + (pageNo - 1) + "&pageSize=" + pageSize),
-            nextUrl : (pageNo >= maxPageNo) ? '' : (url + paramStartChar + "pageNo=" + (pageNo + 1) + "&pageSize=" + pageSize),
-            lastUrl : (pageNo >= maxPageNo) ? '' : (url + paramStartChar + "pageNo=" + maxPageNo + "&pageSize=" + pageSize)
+            nextUrl : (pageNo >= maxPageNo) ? '' : (url + paramStartChar + "pageNo=" + (Number(pageNo) + 1) + "&pageSize=" + pageSize),
+            lastUrl : (pageNo >= maxPageNo) ? '' : (url + paramStartChar + "pageNo=" + (Number(pageNo) + 1) + "&pageSize=" + pageSize)
         };
+
         $("#" + idElement).html(Mustache.render(paginateTemplate, view));
 
         $(".page-action").click(function(e) {
             e.preventDefault();
             $("#" + idElement + " .pageNo").val($(this).attr("data-target"));
             var targetUrl  = $(this).attr("data-url");
+            console.log(targetUrl);
             if(targetUrl != '') {
                 $.ajax({
                     url : targetUrl,

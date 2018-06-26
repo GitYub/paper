@@ -1,16 +1,22 @@
 package com.yxy.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.yxy.beans.PageQuery;
 import com.yxy.beans.PageResult;
+import com.yxy.common.RequestHolder;
 import com.yxy.dao.SysPaperMapper;
 import com.yxy.dao.SysUserMapper;
 import com.yxy.dto.SearchPaperDto;
+import com.yxy.dto.SysPaperDto;
 import com.yxy.exception.ParamException;
 import com.yxy.model.SysPaper;
+import com.yxy.model.SysUser;
 import com.yxy.param.PaperParam;
 import com.yxy.param.SearchPaperParam;
 import com.yxy.util.BeanValidator;
+import com.yxy.util.IpUtil;
+import com.yxy.util.OssUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,8 +27,10 @@ import javax.annotation.Resource;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * PaperService
@@ -48,32 +56,27 @@ public class PaperService {
         BeanValidator.check(param);
         String fileName = file.getOriginalFilename();
         String suffix = fileName.substring(fileName.lastIndexOf("."));
-        String name = "/file/" + UUID.randomUUID().toString() + suffix;
+        String name = UUID.randomUUID().toString() + suffix;
         File wordFile = new File(name);
 
-
-        log.info("{}", suffix);
+        log.info("{}", wordFile.getName());
 
         try {
 
             file.transferTo(wordFile);
-            wordFile.createNewFile();
+            OssUtil.save(wordFile);
 
-            log.info("文件名：{}", wordFile.getName());
-            log.info("存储地址：{}", wordFile.getAbsolutePath());
-            String url = wordFile.getAbsolutePath();
+            String url = "https://view.officeapps.live.com/op/view.aspx?src=https://yuxinyu.oss-cn-hangzhou.aliyuncs.com/"
+                    + wordFile.getName();
 
             SysPaper paper = SysPaper.builder()
-                    //.authorId(RequestHolder.getCurrentUser().getId())
-                    .authorId(1)
+                    .authorId(RequestHolder.getCurrentUser().getId())
                     .moduleId(param.getModuleId())
                     .status(0)
                     .title(param.getTitle())
                     .uploadTime(new Date())
-                    //.operateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()))
-                    .operateIp("")
-                    //.operator(RequestHolder.getCurrentUser().getUsername())
-                    .operator("")
+                    .operateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()))
+                    .operator(RequestHolder.getCurrentUser().getUsername())
                     .operateTime(new Date())
                     .url(url)
                     .build();
@@ -174,7 +177,31 @@ public class PaperService {
         if (count > 0) {
 
             List<SysPaper> paperList = sysPaperMapper.getPageListBySearchDto(userList, dto, page);
-            return PageResult.<SysPaper>builder().total(count).data(paperList).build();
+            List<SysUser> users= sysUserMapper.getByIdList(paperList.stream().map(SysPaper::getAuthorId).collect(Collectors.toList()));
+
+            HashMap<Integer, String> hashMap = Maps.newHashMap();
+            for (SysUser user : users) {
+
+                hashMap.put(user.getId(), user.getUsername());
+
+            }
+
+            List<SysPaperDto> paperDtoList = Lists.newArrayList();
+            for (SysPaper paper : paperList) {
+
+                SysPaperDto announcementDto = SysPaperDto.builder()
+                        .author(hashMap.get(paper.getAuthorId()))
+                        .id(paper.getId())
+                        .moduleId(paper.getModuleId())
+                        .title(paper.getTitle())
+                        .uploadTime(paper.getUploadTime())
+                        .url(paper.getUrl())
+                        .build();
+                paperDtoList.add(announcementDto);
+
+            }
+
+            return PageResult.<SysPaperDto>builder().total(count).data(paperDtoList).build();
 
         }
 

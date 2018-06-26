@@ -1,5 +1,6 @@
 package com.yxy.controller;
 
+import com.aliyun.oss.OSSClient;
 import com.yxy.common.ApplicationContextHelper;
 import com.yxy.common.JsonData;
 import com.yxy.dao.SysAclModuleMapper;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -45,6 +47,14 @@ public class TestController {
         BeanValidator.check(vo);
 
         return JsonData.success("test validate");
+    }
+
+    public static void main(String[] args) {
+
+        String str = "https://view.officeapps.live.com/op/view.aspx?src=https://yuxinyu.oss-cn-hangzhou.aliyuncs.com/123.docx";
+        str = str.substring(str.lastIndexOf("/") + 1);
+        System.out.println(str);
+
     }
 
 }

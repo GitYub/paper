@@ -2,6 +2,7 @@ package com.yxy.controller;
 
 import com.yxy.beans.PageQuery;
 import com.yxy.common.JsonData;
+import com.yxy.common.RequestHolder;
 import com.yxy.param.AnnouncementParam;
 import com.yxy.service.AnnouncementService;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +35,7 @@ public class AnnouncementController {
     @RequestMapping("/submit.page")
     public ModelAndView submit() {
 
-        return new ModelAndView("submit");
+        return new ModelAndView("submitA");
 
     }
 

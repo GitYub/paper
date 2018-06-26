@@ -16,7 +16,7 @@
     id, title, author_id, upload_time, status, operator, operate_ip, operate_time, content
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
+    select 
     <include refid="Base_Column_List" />
     from sys_announcement
     where id = #{id,jdbcType=INTEGER}
@@ -26,16 +26,16 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.yxy.model.SysAnnouncement" >
-    insert into sys_announcement (id, title, author_id,
-      upload_time, status, operator,
+    insert into sys_announcement (id, title, author_id, 
+      upload_time, status, operator, 
       operate_ip, operate_time, content
       )
-    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{authorId,jdbcType=INTEGER},
-      #{uploadTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR},
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{authorId,jdbcType=INTEGER}, 
+      #{uploadTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{operator,jdbcType=VARCHAR}, 
       #{operateIp,jdbcType=VARCHAR}, #{operateTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yxy.model.SysAnnouncement" keyProperty="id" useGeneratedKeys="true">
+  <insert id="insertSelective" parameterType="com.yxy.model.SysAnnouncement" >
     insert into sys_announcement
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -138,18 +138,19 @@
       content = #{content,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
+  
   <select id="getPage" parameterType="map" resultMap="BaseResultMap">
     select <include refid="Base_Column_List" />
     from sys_announcement
     where status = 0
     order by upload_time desc
+    limit #{page.offset}, #{page.pageSize}
   </select>
 
   <select id="count" parameterType="map" resultType="int">
     select count(1)
     from sys_announcement
     where status = 0
-    order by upload_time desc
+    limit #{page.offset}, #{page.pageSize}
   </select>
 </mapper>

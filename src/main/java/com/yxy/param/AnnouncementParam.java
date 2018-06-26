@@ -30,7 +30,6 @@ public class AnnouncementParam {
     @NotBlank(message = "公告内容不能为空")
     private String content;
 
-    @NotNull(message = "必须提供公告的作者")
     private Integer authorId;
 
 }

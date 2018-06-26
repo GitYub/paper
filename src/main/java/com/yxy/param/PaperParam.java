@@ -27,7 +27,6 @@ public class PaperParam {
     @Length(min = 1, max = 20, message = "论文标题需要在20个字以内")
     private String title;
 
-    @NotNull(message = "必须提供论文的作者")
     private Integer authorId;
 
     @NotNull(message = "必须提供论文的模块分类")

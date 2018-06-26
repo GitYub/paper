@@ -4,13 +4,17 @@ import com.yxy.beans.PageQuery;
 import com.yxy.common.JsonData;
 import com.yxy.param.PaperParam;
 import com.yxy.param.SearchPaperParam;
+import com.yxy.param.UploadFileParam;
 import com.yxy.service.PaperService;
+import com.yxy.util.OssUtil;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * PaperController
@@ -43,22 +47,26 @@ public class PaperController {
     @RequestMapping("/submit.page")
     public ModelAndView submit(){
 
-        return new ModelAndView("submit");
+        return new ModelAndView("submitP");
 
     }
 
     @RequestMapping(value = "/save.json")
-    public JsonData save(@RequestParam("file") MultipartFile file, PaperParam param) {
+    public JsonData save(UploadFileParam uploadFileParam) {
 
-        paperService.save(file, param);
+        PaperParam param = new PaperParam();
+        param.setTitle(uploadFileParam.getTitle());
+        param.setModuleId(uploadFileParam.getType());
+        paperService.save(uploadFileParam.getFile(), param);
         return JsonData.success();
 
     }
 
     @RequestMapping("/download.json")
-    public JsonData download(@RequestParam("id") Integer id) {
+    public JsonData download(HttpServletResponse response, @RequestParam("id") Integer id) {
 
-        return JsonData.success(paperService.download(id));
+        OssUtil.download(response, paperService.download(id));
+        return JsonData.success();
 
     }
 

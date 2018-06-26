@@ -90,7 +90,7 @@ public class SysLogService {
                 Preconditions.checkNotNull(beforeUser, "待还原的用户不存在");
                 if (StringUtils.isBlank(sysLogWithBLOBs.getNewValue()) || StringUtils.isBlank(sysLogWithBLOBs.getOldValue())) {
 
-                    throw  new ParamException("新增和删除操作不做还原");
+                    throw new ParamException("新增和删除操作不做还原");
 
                 }
 

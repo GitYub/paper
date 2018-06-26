@@ -79,6 +79,8 @@ public class UserController {
 
             }
 
+            return;
+
         }
 
         request.setAttribute("error", errorMsg);
@@ -140,6 +142,7 @@ public class UserController {
             param.setStatus(1);
 
             sysUserService.save(param, password);
+            return;
 
         }
 

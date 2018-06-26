@@ -37,7 +37,7 @@
       #{operator,jdbcType=VARCHAR}, #{operateIp,jdbcType=VARCHAR}, #{operateTime,jdbcType=TIMESTAMP}, 
       #{url,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.yxy.model.SysPaper" >
+  <insert id="insertSelective" parameterType="com.yxy.model.SysPaper" keyProperty="id" useGeneratedKeys="true">
     insert into sys_paper
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
